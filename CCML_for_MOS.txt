@@ -1,0 +1,107 @@
+parameters:
+    Aircraft model:
+		int model1=747200	   [property m1]			
+		int model2=747300	   [property m2]			
+		int model3=747400	   [property m3]			
+		int model4=647200      [property m4]
+		int model5=647300      [property m5]	
+    Change crew:
+		boolean cc1=true	      [property c1]			
+		boolean cc2=false	   [property c2]			
+    crew numbers:
+		int crewnumbers1>10      [if  m1 and c1] [property crew1]
+		int crewnumbers2=10      [if  m1 and c2] [property crew2]
+        	int crewnumbers3<10      [if  m1 and c1] [property crew3]
+        	int crewnumbers4>12      [if  m2 and c1] [property crew4]
+		int crewnumbers5=12      [if  m2 and c2] [property crew5]
+        	int crewnumbers6<12      [if  m2 and c1] [property crew6]
+        	int crewnumbers7>14      [if  m3 and c1] [if m5 and c1] [property crew7]
+		int crewnumbers8=14      [if  m3 and c2] [if m5 and c2] [property crew8]
+        	int crewnumbers9<14      [if  m3 and c1] [if m5 and c1] [property crew9]
+        	int crewnumbers10>13      [if  m4 and c1] [property crew10]
+		int crewnumbers11=13      [if  m4 and c2] [property crew11]
+        	int crewnumbers12<13      [if  m4 and c1] [property crew12]
+    Change pilot:
+		boolean cp1=true	      [property p1]			
+		boolean cp2=false	   [property p2]
+    pilots numbers:
+		int pilotsnumbers1=3       [if m2 and p2] [if m3 and p2] [if m5 and p2] [property pilot1]
+		int pilotsnumbers2>3       [if m2 and p1] [if m3 and p1] [if m5 and p1] [property pilot2]
+        	int pilotsnumbers3<3       [if m2 and p1] [if m3 and p1] [if m5 and p1] [property pilot3]
+        	int pilotsnumbers4=2       [if m1 and p2] [if m4 and p2] [property pilot4] 
+		int pilotsnumbers5>2       [if m1 and p1] [if m4 and p1] [property pilot5] 
+       	 	int pilotsnumbers6<2       [if m1 and p1] [if m4 and p1] [property pilot6]
+
+    child passengers numbers:
+		int childnumbers1=0   [property child1]
+		int childnumbers2>0   [property child2]
+environments:
+    Requested Flowers:
+		int flowers1=0    [property flower1]
+		int flowers2>0    [property flower2]
+  
+outputs:
+    First Class Meals:
+        int f1=0   [if m1][if m4]
+        int f2=10  [if m2]
+        int f3=20  [if m3][if m5]
+
+    Business Class Meals:
+        int b1=40  [if m1]
+        int b2=50  [if m2]
+        int b3=60  [if m3]
+        int b4=70  [if m4]
+        int b5=80  [if m5]
+
+    Economic Class Meals:
+        int e1=300  [if m1]
+    	int e2=400  [if m2]
+    	int e3=480  [if m3]
+    	int e4=420  [if m4]
+    	int e5=430  [if m5]
+
+    Crew Meals:
+	int c1>20     [if crew1]
+	int c2=20     [if crew2] 
+        int c3<20     [if crew3] 
+        int c4>24     [if crew4]
+	int c5=24     [if crew5] 
+        int c6<24     [if crew6] 
+        int c7>28     [if crew7] 
+	int c8=28     [if crew8]
+        int c9<28     [if crew9] 
+        int c10>26    [if crew10]  
+	int c11=26    [if crew11]  
+        int c12<26    [if crew12]
+
+    Pilots Meals:
+	int p1>6      [if pilot1]
+	int p2=6      [if pilot2]
+        int p3<6      [if pilot3]
+        int p4>4      [if pilot4]
+	int p5=4      [if pilot5]
+        int p6<4      [if pilot6]
+
+    Child Meals:
+	int ch1>0      [if child2]
+	int ch2=0      [if child1]
+
+    Flower Meals:
+	int fl1>0      [if flower2]
+	int fl2=0      [if flower1]  
+
+MR_spec:{r1}
+iteNumbers:1
+MR r1:
+input:[ crewnumbers9 ]
+follow-input:[ crewnumbers9=14 ]
+output:[c9]
+follow-output:[c9>c9 ]
+relation:c9>0;
+
+MR MOSr1:
+input:[ model4,crewnumbers12,pilotsnumbers4,childnumbers1,flowers1]
+follow-input:[ model4,crewnumbers12,pilotsnumbers5,childnumbers1,flowers1 ]
+output:[f1,b4,e4,c12,p5,ch2,fl2]
+follow-output:[f1,b4,e4,c12,p4,ch2,fl2 ]
+relation:p5<p4;

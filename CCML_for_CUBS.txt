@@ -1,0 +1,71 @@
+parameters:
+    Plan Type:
+        string t1=A                       [property A]
+        string t2=B                       [property B]
+    Plan Fee:
+    	int f1=46                       [property f46]
+    	int f2=96                       [property f96]
+    	int f3=126                      [if B] [property f126]
+    	int f4=186                      [if B] [property f186]
+    	int f5=286                      [if A] [property f286]
+    	int f6=886                      [if A] [property f886]
+environments:
+	Talk:	
+		int time1<=50                  [if A and f46] [property time1]
+		int time2>50                   [if A and f46][property time2]
+		int time3<=96                  [if A and f96][property time3]
+		int time4>96                   [if A and f96][property time4]
+		int time5<=286                 [if A and f286][property time5]
+		int time6>286                  [if A and f286][property time6]
+		int time7<=3000                [if A and f886][property time7]
+		int time8>3000                 [if A and f886][property time8]
+		int time9<=120	             [if B and f46][property time9]
+        	int time10>120	                 [if B and f46][property time10]
+       		int time11<=450	             [if B and f96][property time11]
+        	int time12>450	                 [if B and f96][property time12]
+		int time13<=680	             [if B and f126][property time13]
+		int time14>680	                 [if B and f126][property time14]
+		int time15<=1180	             [if B and f186][property time15]
+		int time16>1180	             [if B and f186][property time16]
+
+	Flow:
+		int flow1<=150                  [if A and f46][property flow1]
+		int flow2>150                   [if A and f46][property flow2]
+		int flow3<=240                  [if A and f96][property flow3]
+		int flow4>240                   [if A and f96][property flow4]
+		int flow5<=900                 [if A and f286][property flow5]
+		int flow6>900                  [if A and f286][property flow6]
+		int flow7<=3000                [if A and f886][property flow7]
+		int flow8>3000                 [if A and f886][property flow8]
+		int flow9<=40	                 [if B and f46][property flow9]
+        	int flow10>40	                 [if B and f46][property flow10]
+        	int flow11<=80	                 [if B and f96][property flow11]
+        	int flow12>80	                 [if B and f96][property flow12]
+		int flow13<=100	             [if B and f126][property flow13]
+		int flow14>100	                 [if B and f126][property flow14]
+		int flow15<=150	             [if B and f186][property flow15]
+		int flow16>150	                 [if B and f186][property flow16]
+outputs:
+    Charge:
+        int c1=f1    [if time1 and flow1][if time9 and flow9]                    
+	int c2>f1    [if time2] [if flow2] [if time10] [if flow10]
+	int c3=f2    [if time3 and flow3] [if time11 and flow11]                    
+	int c4>f2    [if time4] [if flow4] [if time12] [if flow12]
+	int c5=f3    [if time13 and flow13]                    
+	int c6>f3    [if time14] [if flow14]
+	int c7=f4    [if time15 and flow15]                    
+	int c8>f4    [if time16] [if flow16]
+	int c9=f5    [if time5 and flow5]                    
+	int c10>f5   [if time6] [if flow6]
+	int c11=f6   [if time7 and flow7]                     
+	int c12>f6   [if time8] [if flow8]                   
+
+
+MR_spec:{r1}
+iteNumbers:1
+MR r1:
+input:[ t2,f2,time12,flow12 ]
+follow-input:[ t2,f2,time11,flow12 ]
+output:[c4]
+follow-output:[c4]
+relation:c4>c4;

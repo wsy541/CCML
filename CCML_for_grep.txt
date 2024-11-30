@@ -1,0 +1,115 @@
+parameters:
+    Any Character:
+        string NA
+        string NP = \?
+        string AC = NULL [property ac][if wc and dc and bc and sc and oc and not_uc][if wc and dc and bc and sc and not_oc and uc][if wc and dc and bc and not_sc and oc and uc][if wc and dc and not_bc and sc and oc and uc][if wc and not_dc and bc and sc and oc and uc][if not_wc and dc and bc and sc and oc and uc]
+    Word Character:
+        string YW = \w
+        string NW = \W
+        string WC = NULL [property wc][if ac and dc and bc and sc and oc and not_uc][if ac and dc and bc and sc and not_oc and uc][if ac and dc and bc and not_sc and oc and uc][if ac and dc and not_bc and sc and oc and uc][if ac and not_dc and bc and sc and oc and uc][if not_ac and dc and bc and sc and oc and uc]
+    Digit Character:
+        string YD = \d
+        string ND = \D
+        string DC = NULL [property dc][if wc and ac and bc and sc and oc and not_uc][if wc and ac and bc and sc and not_oc and uc][if wc and ac and bc and not_sc and oc and uc][if wc and ac and not_bc and sc and oc and uc][if wc and not_ac and bc and sc and oc and uc][if not_wc and ac and bc and sc and oc and uc]
+    Blank Character:
+        string YS = \s
+        string NS = \S
+        string BC = NULL [property bc][if wc and dc and ac and sc and oc and not_uc][if wc and dc and ac and sc and not_oc and uc][if wc and dc and ac and not_sc and oc and uc][if wc and dc and not_ac and sc and oc and uc][if wc and not_dc and ac and sc and oc and uc][if not_wc and dc and ac and sc and oc and uc]
+    Special Character:
+        string N1 = [:upper:]
+        string N2 = [:lower:]
+        string N3 = [:digit:]
+        string N4 = [:alnum:]
+        string N5 = [:space:]
+        string N6 = [:punct:]
+        string N7 = [:cntrl:]
+        string N8 = [:print:]
+        string N9 = [:xdigit:]
+        string N10 = [:blank:]
+        string SC = NULL [property sc]
+    Dot Character:
+        string DOT = .
+        string OC = NULL [property oc][if wc and dc and bc and sc and ac and not_uc][if wc and dc and bc and sc and not_ac and uc][if wc and dc and bc and not_sc and ac and uc][if wc and dc and not_bc and sc and ac and uc][if wc and not_dc and bc and sc and ac and uc][if not_wc and dc and bc and sc and ac and uc]
+    Union Character:
+        string UR = [A-Z]
+        string LR = [a-z]
+        string NR = [0-9]
+        string UC = NULL [property uc][if wc and dc and bc and sc and oc and not_ac][if wc and dc and bc and sc and not_oc and ac][if wc and dc and bc and not_sc and oc and ac][if wc and dc and not_bc and sc and oc and ac][if wc and not_dc and bc and sc and oc and ac][if not_wc and dc and bc and sc and oc and ac]
+
+outputs:
+    grepResult:
+        string resultIndex
+
+MR_spec:{r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12}
+MR r1://add [] to \w
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NA,YW='['+YW+']',YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex=resultIndex;
+MR r2:// \w to \W
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NA,NW,YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r3://add [] to \d
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NP,YW,YD='['+YD+']',YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex=resultIndex;
+MR r4:// \d to \D
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NA,NW,ND,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r5://add [] to \?
+    input:[NP,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NP='['+NP+']',YW,YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+follow-output:[resultIndex]
+    relation:resultIndex=resultIndex;
+MR r6://add [] to \s
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NP,YW,YD,YS='['+YS+']',N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex=resultIndex;
+MR r7:// \s to \S
+    input:[NA,YW,YD,YS,N1,DOT,UR]
+    follow-input:[NA,NW,ND,NS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r8:// \W to \w
+    input:[NA,NW,YD,YS,N1,DOT,UR]
+    follow-input:[NA,YW,YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r9:// \S to \s
+    input:[NA,YW,YD,NS,N1,DOT,UR]
+    follow-input:[NA,YW,YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r10:// \D to \d
+    input:[NA,YW,ND,YS,N1,DOT,UR]
+    follow-input:[NA,YW,YD,YS,N1,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r11:// [[:digit:]] to [^[:digit:]]
+    input:[NA,YW,ND,YS,N3,DOT,UR]
+    follow-input:[NA,YW,YD,YS,'^'+N3,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;
+MR r12:// [[:alnum:]] to [^[:alnum:]]
+    input:[NA,YW,ND,YS,N4,DOT,UR]
+    follow-input:[NA,YW,YD,YS,'^'+N4,DOT,UR]
+    output:[resultIndex]
+    follow-output:[resultIndex]
+    relation:resultIndex!=resultIndex;

@@ -1,0 +1,39 @@
+parameters:
+    Aircraft Cabin:
+        string c1=first class         [property c1]
+        string c2=business class    [property c2]
+        string c3=economy class    [property c3]
+        string c4=infant ticket       [property c4]
+Region:
+    string r1=domestic
+    string r2=global        [property global]
+Student Not:
+    boolean s1=false
+    boolean s2=true          [if c3][property s2]
+environments:
+    Luggage Weight:
+        int w1<=40       [if c1] [property w1]
+        int w2>40        [if c1] [property w2]
+	int w3<=30       [if global and s2] [if c2] [property w3]
+	int w4>30        [if global and s2] [if c2] [property w4]
+	int w5<=20       [if s2 and not_global] [if c3 and not_s2] [property w5]
+	int w6>20       [if s2 and not_global] [if c3 and not_s2] [property w6]
+	int w7=0        [if c4] [property w7]
+	int w8>0        [if c4] [property w8]
+    Airfare:
+        int e1=0       [property e1]
+        int e2>0       [property e2]
+outputs:
+    Luggage Fee:
+        int f1=0       [if e1] [if w1 or w3 or w5 or w7]
+        int f2>0       [if e2 and w2][if e2 and w4][if e2 and w6][if e2 and w8]
+
+MR_spec:{ACMSr1}
+iteNumbers:1
+
+MR ACMSr1:
+input:[ c2,r2,s1,w3,e2 ]
+follow-input:[ c2,r2,s1,w3,e1 ]
+output:[f1]
+follow-output:[f2]
+relation:f1=f2;

@@ -1,0 +1,44 @@
+parameters:
+    Staff Level:
+        string l1=senior sales manager [property l1]
+        string l2=sales manager    [property l2]
+        string l3=sales supervisor   [property l3]
+    Mileage:
+    	int y1 (- [0,3000]     [if not_l3] [property y1]
+    	int y2 (- (3000,4000]  [if not_l3] [property y2]
+    	int y3 >4000        [if not_l3] [property y3]
+    	string y4=NULL                   [if l3] [property y4]
+    Monthly Sales Amount:
+    	double s1 (- [0.00,50000.00) [property s1]
+    	double s2 (- [50000.00,80000.00) [property s2]
+    	double s3 (- [80000.00,100000.00) [property s3]
+    	double s4>=100000.00    [property s4]
+    Airfare:
+    	double f1=0.00   [property f1]
+    	double f2>0.00   [property f2]
+environments:
+    Other Expenses:
+        double e1=0.00       [if s4] [property e1]
+        double e2>0.00       [if s4] [property e2]
+        string e3=NULL                  [if not_s4] [property e3]
+outputs:
+    Fee for the Use of Car:
+        double c1=0.00   [if y4] [if l1 and not_y3] [if l2 and y1]
+        double c2>0.00   [if y3 and l1] [if l2 and not_y1]
+
+    Actual Reimbursement of Airfare:
+    	double a1=0.00 [if f1] 
+    	double a2>0.00 [if l1 and f2] [if l2 and not_s1 and f2] [if l3 and s3 and f2] [if l3 and s4 and f2]
+
+    Actual Reimbursement of Other:
+    	double o1=0.00 [if not_e2]
+    	double o2>0.00 [if e2]
+
+MR_spec:{ERSr1}
+iteNumbers:1
+MR ERSr1:
+input:[ l1,y3,s4,f2,e2]
+follow-input:[ l3,y4,s4,f2,e2]
+output:[c2,a2,o2]
+follow-output:[c1,a2,o2]
+relation: c2 > c1;

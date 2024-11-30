@@ -1,0 +1,205 @@
+parameters:
+    FloatType:
+        float f1 (- [Float.MIN_VALUE, Float.MAX_VALUE]
+        float f2 < Float.MIN_VALUE
+        float f3 > Float.MAX_VALUE
+        string f4 = NULL
+    DoubleType:
+        double d1 (- [Double.MIN_VALUE, Double.MAX_VALUE]
+        double d2 < Double.MIN_VALUE
+        double d3 > Double.MAX_VALUE
+        string d4 = NULL
+    ShortType:
+        short s1 (- [-2^15, 2^15 -1]
+        short s2 < -2^15
+        short s3 > 2^15 -1
+        string s4 = NULL
+    ByteType:
+        byte b1 (- [-2^7, 2^7 -1]
+        byte b2 < -2^7
+        byte b3 > 2^7-1
+        string b4 = NULL
+    IntType:
+        int i1 (- [-2^31, 2^31 -1]
+        int i2 < -2^31
+        int i3 > 2^31
+        string i4 = NULL
+    LongType:
+        long l1 (- [-2^63, 2^63 -1]
+        long l2 < -2^63
+        long l3 > 2^63 -1
+        string l4 = NULL
+    BooleanType:
+        boolean bool1 = true
+        boolean bool2 = false
+        string bool3 = NULL
+    CharType:
+        char c1 (- C
+        string c2 = NULL
+    DateType:
+        date date1 (- ISO-8601
+        date date2 (- yyyy-MM-dd
+        date date3 (- yyyy-MM-dd HH:mm:ss
+        date date4 (- yyyy-MM-dd HH:mm:ss.SSS
+        string date5 = NULL
+    StringType:
+        string st1 (- CS
+        string st2 = NULL
+    EnumType:
+        enum e1
+        string e2 = NULL
+    MapType:
+        map m1
+        string m2 = NULL
+    ListType:
+        list li1
+        string li2 = NULL
+    SetType:
+        set se1
+        string se2 = NULL
+    ExistComment:
+        boolean exist1 = true
+        boolean exist2 = false
+environments:
+    JsonStringFormat:
+        string format1 = single
+        string format2 = array
+        string format3 = binary
+        string format4 = string
+outputs:
+    ParseResult:
+        string result
+    ResultSize:
+        int s
+MR_spec:{r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17}
+MR r1://whether exist comment
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r2://change format from single to binary
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format3]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r3://change format from single to string
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format4]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r4://change float value
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f2,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r5://change double value
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d2,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r6://change short value
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s2,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r7://change date type
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date3,st1,e1,m1,li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r8://add list element
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1=li1+{1},se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r9://add map element
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r10://add set element
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1=se1+{2},exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r11://change byte type
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b2,i1,l1,bool1,c1,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r12://change int type
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i2,l1,bool1,c1,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r13://change long type
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l2,bool1,c1,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r14://change boolean type
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:result=result;s=s;
+MR r15://whether have char
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s;
+MR r16://whether have float
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f4,d1,s1,b1,i1,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s
+MR r17://whether have double
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d4,s1,b1,i1,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+relation:s>s
+MR r18://whether have short
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s4,b1,i1,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s
+MR r19://whether have byte
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b4,i1,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s
+MR r20://whether have int
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i4,l1,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s
+MR r21://whether have long
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l4,bool1,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s
+MR r22://whether have boolean
+    input:[f1,d1,s1,b1,i1,l1,bool1,c1,date1,st1,e1,m1,li1,se1,exist2,format1]
+    follow-input:[f1,d1,s1,b1,i1,l1,bool3,c2,date1,st1,e1,m1=m1+{3:2},li1,se1,exist2,format1]
+    output:[result,s]
+    follow-output:[result,s]
+    relation:s>s

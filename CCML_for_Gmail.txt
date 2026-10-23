@@ -1,0 +1,101 @@
+Parameters:
+Email Type:
+string t1= Primary [property t1]
+string t2= Social [property t2]
+string t3= Promotions  [property t3]
+string t4= Updates  [property t4]
+string t5= Forums  [property t5]
+string t6= all [property t6]
+
+Label Category:
+string l1= Inbox  [property l1]
+string l2= Starred  [property l2]
+string l3= Sent  [property l3]
+string l4= Drafts  [property l4]
+string l5= Spam  [property l5]
+string l6= Trash  [property l6]
+string l7= all  [property l7]
+
+Attachment Status:
+boolean a1=false [property a1]
+boolean a2=true [property a2]
+
+Size Condition:
+int s1(-(0,1000] [property s1]
+
+Sender Condition:
+string sender  [property sender]
+
+Environments:
+Search Scope:
+string scope1= All Mail [property scope1] [if l7]
+string scope2= Current Label Only  [if l1 or l2 or l3 or l4 or l5 or l6][property scope2]
+
+Inbox Sorting:
+string sort1= Default  [property sort1]
+string sort2= Important First  [property sort2]
+string sort3= Unread First  [property sort3]
+string sort4= Starred First  [property sort4]
+
+Outputs:
+Search Results:
+int r1=0 [property r1]
+int r2>0 [property r2]
+
+MR_spec:{MR1, MR2, MR3, MR4, MR5, MR6, MR7}
+
+MR MR1:
+Input: [t1, l1, a1, s1, scope1]
+Follow-Input: [t1, l1, a1, s1=s1-1, scope1]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2>r2
+
+MR MR2:
+Input: [t1, l1, a1, s1, sort1]
+Follow-Input1: [t1, l1, a1, s1, sort2]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2=r2
+
+MR MR3:
+Input: [t1, l1, a1, s1, sort1]
+Follow-Input1: [t1, l1, a1, s1, sort3]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2=r2
+
+MR MR4:
+Input: [t1, l1, a1, s1, sort1]
+Follow-Input1: [t1, l1, a1, s1, sort4]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2=r2
+
+MR MR5:
+Input: [t1, l1, a1, s1, scope1]
+Follow-Input: [t1, l1, a2, s1, scope1]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2>r2
+
+MR MR6:
+Input: [t1, l1, a1, s1, sender]
+Follow-Input: [t1, l1, a1, s1, sender=sender+'1234567@163.com']
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2<r2
+
+MR MR7:
+Input: [t1, l1, a1, s1, scope1]
+Follow-Input: [t1, l1, a1, s1, scope2]
+Output: [r2]
+Follow-Output: [r2]
+Relation: r2>r2
+
+MR MR8: 
+Input: [t6, l7, a1, s1, scope1]
+Follow-Input: [t2, l1, a1, s1, scope1]
+Output: [r2]
+Follow-Output: [r2] 
+Relation: r2>r2
